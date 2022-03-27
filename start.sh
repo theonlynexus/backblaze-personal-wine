@@ -5,11 +5,12 @@ echo "Setting the timezone."
 echo $TZ | sudo tee /etc/timezone
 DEBIAN_FRONTEND=noninteractive TZ=$TZ sudo dpkg-reconfigure --frontend noninteractive tzdata
 
+WINEPREFIX=/config/.wine
 DRIVE_C=$WINEPREFIX/drive_c
 INSTALL_FILE=/config/install_backblaze.exe
 PROGRAM_FILES=$DRIVE_C/Program\ Files
 #ASIDE_FILE=$PROGRAM_FILES/Backblaze/bzbui.exe.aside
-#EXE_FILE=$PROGRAM_FILES/Backblaze/bzbui.exe
+EXE_FILE=$PROGRAM_FILES/Backblaze/bzbui.exe
 URL=https://www.backblaze.com/win32/install_backblaze.exe
 export WINEARCH=win32
 
@@ -50,7 +51,15 @@ configure_wine
 echo "Downloading the Backblaze personal installer..."
 wget -c "$URL" -P "/config"
 
-echo "Backblaze installer started, please go through the graphical setup"
-wine "$INSTALL_FILE"
+#echo "${EXE_FILE}"
+
+if [ ! -f "${EXE_FILE}" ]; then
+	echo "Backblaze installer started, please go through the graphical setup"
+	wine "${INSTALL_FILE}"
+else
+	echo "Backblaze started"
+	wine "${EXE_FILE}"
+fi
+
 
 
